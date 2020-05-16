@@ -1,15 +1,9 @@
 import React, {useEffect} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  VirtualizedList,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {Text, View, StyleSheet, VirtualizedList} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {theme} from '../../styles/theme';
 import Loading from '../Loading';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchIndiaData,
@@ -17,9 +11,9 @@ import {
   fetchStateData,
 } from '../../store/actions/covidActions';
 import OverviewHeader from '../OverviewHeader';
+import CovidListItem from '../CovidListItem';
 
 const CovidData = ({title, state}) => {
-  const navigation = useNavigation();
   const colors = useTheme().colors;
   const dispatch = useDispatch();
 
@@ -40,12 +34,6 @@ const CovidData = ({title, state}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, indiaData, worldData, stateData]);
-
-  const onStatePress = state => {
-    navigation.navigate('covid state', {
-      state,
-    });
-  };
 
   const getItem = (data, index) => {
     if (title === 'state') {
@@ -180,10 +168,9 @@ const CovidData = ({title, state}) => {
           <Text style={styles.stateHeaderText}>Deaths</Text>
         </View>
         <VirtualizedList
-          contentContainerStyle={[
-            styles.listContentStyle,
-            title === 'state' ? {paddingBottom: 470} : {paddingBottom: 695},
-          ]}
+          contentContainerStyle={
+            title === 'state' ? {paddingBottom: 470} : {paddingBottom: 695}
+          }
           data={
             title === 'india'
               ? indiaData.sort((a, b) => b.confirmed - a.confirmed)
@@ -197,7 +184,7 @@ const CovidData = ({title, state}) => {
                   })[0]
                   .districtData.sort((a, b) => b.confirmed - a.confirmed)
           }
-          maxToRenderPerBatch={5}
+          maxToRenderPerBatch={12}
           keyExtractor={(item, index) => {
             return title === 'india'
               ? item.state + '-' + item.statecode
@@ -218,104 +205,7 @@ const CovidData = ({title, state}) => {
               title === 'world' ||
               title === 'state'
             ) {
-              return (
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    title === 'india' && item.confirmed > 0
-                      ? onStatePress(item)
-                      : null
-                  }>
-                  <View
-                    style={styles.stateBody}
-                    key={
-                      title === 'india'
-                        ? item.state + '-' + item.statecode
-                        : title === 'world'
-                        ? item.Country + '' + item.CountryCode
-                        : index
-                    }>
-                    {title === 'state' ? (
-                      <View style={[styles.stateBodyItem, {flex: 0.1}]}>
-                        <Icon
-                          name="brightness-1"
-                          color={
-                            item.zone
-                              ? colors.covid[item.zone]
-                              : colors.background
-                          }
-                        />
-                      </View>
-                    ) : null}
-                    <View
-                      style={[
-                        styles.stateBodyItem,
-                        {flex: title === 'state' ? 0.4 : 0.5},
-                      ]}>
-                      <Text style={[styles.stateText, {textAlign: 'left'}]}>
-                        {title === 'india'
-                          ? item.state
-                          : title === 'world'
-                          ? item.Country
-                          : item.district}
-                      </Text>
-                    </View>
-                    <View style={styles.stateBodyItem}>
-                      <Text style={styles.stateText}>
-                        {title === 'india'
-                          ? item.confirmed
-                          : title === 'world'
-                          ? item.TotalConfirmed
-                          : item.confirmed}
-                      </Text>
-                      <Text style={[styles.stateText, {color: theme.red}]}>
-                        [+
-                        {title === 'india'
-                          ? item.deltaconfirmed
-                          : title === 'world'
-                          ? item.NewConfirmed
-                          : item.delta.confirmed}
-                        ]
-                      </Text>
-                    </View>
-                    <View style={styles.stateBodyItem}>
-                      <Text style={styles.stateText}>
-                        {title === 'india'
-                          ? item.recovered
-                          : title === 'world'
-                          ? item.TotalRecovered
-                          : item.recovered}
-                      </Text>
-                      <Text style={[styles.stateText, {color: theme.green}]}>
-                        [+
-                        {title === 'india'
-                          ? item.deltarecovered
-                          : title === 'world'
-                          ? item.NewRecovered
-                          : item.delta.recovered}
-                        ]
-                      </Text>
-                    </View>
-                    <View style={styles.stateBodyItem}>
-                      <Text style={styles.stateText}>
-                        {title === 'india'
-                          ? item.deaths
-                          : title === 'world'
-                          ? item.TotalDeaths
-                          : item.deceased}
-                      </Text>
-                      <Text style={[styles.stateText, {color: theme.red}]}>
-                        [+
-                        {title === 'india'
-                          ? item.deltadeaths
-                          : title === 'world'
-                          ? item.NewDeaths
-                          : item.delta.deceased}
-                        ]
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              );
+              return <CovidListItem title={title} item={item} index={index} />;
             }
           }}
           showsVerticalScrollIndicator={false}
@@ -348,30 +238,6 @@ const styles = StyleSheet.create({
     color: theme.red,
     paddingRight: 8,
     textAlign: 'right',
-  },
-  stateBody: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    paddingHorizontal: 8,
-    marginHorizontal: 8,
-    paddingVertical: 4,
-    elevation: 10,
-    borderRadius: 4,
-    marginBottom: 8,
-    height: 40,
-    alignItems: 'center',
-    marginTop: 2,
-  },
-  stateBodyItem: {
-    flex: 0.25,
-  },
-  stateText: {
-    fontSize: 8,
-    textAlign: 'center',
-    color: '#000',
-  },
-  listContentStyle: {
-    paddingBottom: 580,
   },
   zoneTypes: {
     fontSize: 10,
