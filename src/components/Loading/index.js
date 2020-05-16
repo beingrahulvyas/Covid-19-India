@@ -1,10 +1,7 @@
 import React from 'react';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
-import {useTheme} from '@react-navigation/native';
 
 const Loading = () => {
-  const {colors} = useTheme();
-
   return (
     <View style={styles.loadingContainer}>
       <ActivityIndicator />

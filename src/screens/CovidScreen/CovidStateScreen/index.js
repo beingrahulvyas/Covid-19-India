@@ -1,17 +1,17 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {useRoute, useNavigation} from '@react-navigation/native';
+import {useRoute, useNavigation, useTheme} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {globalStyles} from '../../../styles/globalStyle';
-import {theme} from '../../../styles/theme';
 import CovidData from '../../../components/CovidData';
+import ScreenLayout from '../../../components/ScreenLayout';
 
 const CovidStateScreen = () => {
   const navigation = useNavigation();
   const {active, state} = useRoute().params.state;
+  const {colors} = useTheme();
 
   return (
-    <View style={globalStyles.screen}>
+    <ScreenLayout>
       <View style={styles.header}>
         <Icon
           onPress={() => navigation.goBack()}
@@ -23,21 +23,20 @@ const CovidStateScreen = () => {
           style={[
             styles.headerTxt,
             active >= 1000
-              ? {color: theme.red}
+              ? {color: colors.covid.Red}
               : active >= 500
-              ? {color: theme.orange}
-              : {color: theme.green},
+              ? {color: colors.covid.Orange}
+              : {color: colors.covid.Green},
           ]}>
           {state}
         </Text>
       </View>
       <CovidData title="state" state={useRoute().params.state} />
-    </View>
+    </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {},
   header: {
     height: 40,
     paddingHorizontal: 16,

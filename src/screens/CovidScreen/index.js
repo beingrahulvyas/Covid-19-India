@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {Text, View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
-import {globalStyles} from '../../styles/globalStyle';
-import {theme} from '../../styles/theme';
 import CovidData from '../../components/CovidData';
 import {useTheme} from '@react-navigation/native';
+import ScreenLayout from '../../components/ScreenLayout';
 
 const CovidScreen = () => {
   const [activeNav, setActiveNav] = useState('india');
@@ -41,9 +40,9 @@ const CovidScreen = () => {
   ]);
 
   return (
-    <View style={globalStyles.screen}>
+    <ScreenLayout>
       <View>
-        <View style={[styles.nav, globalStyles.container]}>
+        <View style={styles.nav}>
           <TouchableWithoutFeedback
             style={styles.navBtn}
             onPress={() => setActiveNav('india')}
@@ -69,7 +68,7 @@ const CovidScreen = () => {
         </Text>
         <CovidData title={activeNav} />
       </View>
-    </View>
+    </ScreenLayout>
   );
 };
 
@@ -78,6 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
+    paddingHorizontal: 8,
   },
   navBtn: {},
   navBtnView: {

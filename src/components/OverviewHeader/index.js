@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
@@ -29,7 +29,7 @@ const OverviewHeader = ({
     <View style={[styles.overview]}>
       {data.map(value => {
         return (
-          <View style={[cardItemFlat]} key={value.key}>
+          <View style={cardItemFlat} key={value.key}>
             <Text
               style={[
                 styles.cardTxt,

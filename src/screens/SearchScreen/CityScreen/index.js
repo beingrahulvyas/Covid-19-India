@@ -3,7 +3,6 @@ import {StyleSheet, ScrollView, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import CovidTopCard from '../../../components/CovidTopCard';
 import {fetchStateData} from '../../../store/actions/covidActions';
 import OverviewHeader from '../../../components/OverviewHeader';
 
@@ -55,8 +54,9 @@ const CityScreen = () => {
 
   useEffect(() => {
     if (zones && !zone) {
-      let cityZone = zones.filter(value => value.district === city)[0].zone;
-      setZone(cityZone);
+      let currentZone = zones.filter(value => value.district === city)[0];
+      let currentCityZone = currentZone && currentZone.zone;
+      setZone(currentCityZone);
     }
   }, [city, zone, zones]);
 
