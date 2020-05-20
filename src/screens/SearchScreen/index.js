@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   optionListView: {
-    height: 288,
+    height: 200,
     elevation: 24,
     paddingVertical: 8,
     borderRadius: 4,
